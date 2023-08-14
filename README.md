@@ -10,14 +10,20 @@ pip install torchserve_client
 
 ## Usage
 
-Using `torchserve_client` is a breeze! To get started, simply initialize
-a `TorchServeClient` object as shown below:
+Using `torchserve_client` is a breeze! It has support for both REST APIs
+and gRPC APIs.
+
+### REST Client
+
+To make calls to REST endpoint, simply initialize a
+[`TorchServeClientREST`](https://Ankur-singh.github.io/torchserve_client/rest.html#torchserveclientrest)
+object as shown below:
 
 ``` python
-from torchserve_client import TorchServeClient
+from torchserve_client import TorchServeClientREST
 
-# Initialize the TorchServeClient object
-ts_client = TorchServeClient()
+# Initialize the REST TorchServeClient object
+ts_client = TorchServeClientREST()
 ts_client
 ```
 
@@ -28,155 +34,45 @@ If you wish to customize the *base URL*, *management port*, or
 arguments during initialization:
 
 ``` python
-from torchserve_client import TorchServeClient
+from torchserve_client import TorchServeClientREST
 
 # Customize the base URL, management port, and inference port
-ts_client = TorchServeClient(base_url='http://your-torchserve-server.com', 
+ts_client = TorchServeClientREST(base_url='http://your-torchserve-server.com', 
                              management_port=8081, inference_port=8080)
 ts_client
 ```
 
     TorchServeClient(base_url=http://your-torchserve-server.com, management_port=8081, inference_port=8080)
 
-Alternatively, if you don’t provide a base URL during initialization,
-the client will check for the presence of `TORCHSERVE_URL` in the
-environment variables. If the variable is not found, it will gracefully
-fall back to using *localhost* as the default. This way, you have the
-flexibility to tailor your TorchServeClient to your needs effortlessly!
-Happy serving! 🍿🔥
+### gRPC Client
 
-### Management APIs
-
-With TorchServe Management APIs, you can effortlessly manage your models
-at runtime. Here’s a quick rundown of the actions you can perform using
-our `TorchServeClient` SDK:
-
-1.  **Register a Model**: Easily register a model with TorchServe using
-    the `ts_client.management.register_model()` method.
+To create a gRPC client, simply create a
+[`TorchServeClientGRPC`](https://Ankur-singh.github.io/torchserve_client/grpc.html#torchserveclientgrpc)
+object
 
 ``` python
-ts_client.management.register_model('https://torchserve.pytorch.org/mar_files/squeezenet1_1.mar')
+from torchserve_client import TorchServeClientGRPC
+
+# Initialize the gRPC TorchServeClient object
+ts_client = TorchServeClientGRPC()
+ts_client
 ```
 
-    {'status': 'Model "squeezenet1_1" Version: 1.0 registered with 0 initial workers. Use scale workers API to add workers for the model.'}
+    TorchServeClientGRPC(base_url=localhost, management_port=7071, inference_port=7070)
 
-2.  **Increase/Decrease Workers**: Scale the number of workers for a
-    specific model with simplicity using
-    `ts_client.management.scale_workers()`.
+To customize base URL and default ports, pass them as arguments during
+initialization
 
 ``` python
-ts_client.management.scale_workers('squeezenet1_1', min_worker=1, max_worker=2)
+from torchserve_client import TorchServeClientGRPC
+
+# Initialize the gRPC TorchServeClient object
+ts_client = TorchServeClientGRPC(base_url='http://your-torchserve-server.com', 
+                             management_port=7071, inference_port=7070)
+ts_client
 ```
 
-    {'status': 'Processing worker updates...'}
-
-3.  **Model Status**: Curious about a model’s status? Fetch all the
-    details you need using `ts_client.management.describe_model()`.
-
-``` python
-ts_client.management.describe_model('squeezenet1_1')
-```
-
-    [{'modelName': 'squeezenet1_1',
-      'modelVersion': '1.0',
-      'modelUrl': 'https://torchserve.pytorch.org/mar_files/squeezenet1_1.mar',
-      'runtime': 'python',
-      'minWorkers': 1,
-      'maxWorkers': 1,
-      'batchSize': 1,
-      'maxBatchDelay': 100,
-      'loadedAtStartup': False,
-      'workers': [{'id': '9001',
-        'startTime': '2023-07-17T22:55:40.155Z',
-        'status': 'UNLOADING',
-        'memoryUsage': 0,
-        'pid': -1,
-        'gpu': False,
-        'gpuUsage': 'N/A'}]}]
-
-4.  **List Registered Models**: Quickly fetch a list of all registered
-    models using `ts_client.management.list_models()`.
-
-``` python
-# List all models
-ts_client.management.list_models()
-```
-
-    {'models': [{'modelName': 'squeezenet1_1',
-       'modelUrl': 'https://torchserve.pytorch.org/mar_files/squeezenet1_1.mar'}]}
-
-5.  **Set Default Model Version**: Ensure the desired version of a model
-    is the default choice with the
-    `ts_client.management.set_model_version()` method.
-
-``` python
-ts_client.management.set_default_version('squeezenet1_1', '1.0')
-```
-
-    {'status': 'Default vesion succsesfully updated for model "squeezenet1_1" to "1.0"'}
-
-6.  **Unregister a Model**: If you need to bid farewell to a model, use
-    the `ts_client.management.unregister_model()` function to gracefully
-    remove it from TorchServe.
-
-``` python
-ts_client.management.unregister_model('squeezenet1_1')
-```
-
-    {'status': 'Model "squeezenet1_1" unregistered'}
-
-7.  **API Description**: view a full list of Managment APIs.
-
-``` python
-ts_client.management.api_description()
-```
-
-Remember, all these management APIs can be accessed conveniently under
-the namespace `ts_client.management`.
-
-### Inference APIs
-
-TorchServeClient allows you to interact with the Inference API, which
-listens on port 8080, enabling you to run inference on your samples
-effortlessly. Here are the available APIs under the
-`ts_client.inference` namespace:
-
-1.  **API Description**: Want to explore what APIs and options are
-    available? Use `ts_client.inference.api_description()` to get a
-    comprehensive list.
-
-``` python
-ts_client.inference.api_description()
-```
-
-2.  **Health Check API**: Ensure the health of the running server with
-    the `ts_client.inference.health_check()` method.
-
-``` python
-ts_client.inference.health_check()
-```
-
-    {'status': 'Healthy'}
-
-3.  **Predictions API**: Get predictions from the served model using
-    `ts_client.inference.predictions()`.
-
-``` python
-ts_client.inference.prediction('squeezenet1_1', data={'data': open('/Users/ankursingh/Downloads/kitten_small.jpg', 'rb')})
-```
-
-    {'lynx': 0.5455798506736755,
-     'tabby': 0.2794159948825836,
-     'Egyptian_cat': 0.10391879826784134,
-     'tiger_cat': 0.06263326108455658,
-     'leopard': 0.0050191376358270645}
-
-4.  **Explanations API**: Dive into the served model’s explanations with
-    ease using `ts_client.inference.explanations()`.
-
-``` python
-ts_client.inference.explaination('squeezenet1_1', data={'data': open('/Users/ankursingh/Downloads/kitten_small.jpg', 'rb')})
-```
+    TorchServeClientGRPC(base_url=your-torchserve-server.com, management_port=7071, inference_port=7070)
 
 With these intuitive APIs at your disposal, you can harness the full
 power of the Management and Inference API and take your application to

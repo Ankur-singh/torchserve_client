@@ -14,5 +14,11 @@ website:
   navbar:
     background: primary
     search: true
+  sidebar:
+    style: "docked"
+    contents:
+      - index.ipynb
+      - 01_rest.ipynb
+      - 02_grpc.ipynb
 
 metadata-files: [nbdev.yml]
