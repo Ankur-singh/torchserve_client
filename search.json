@@ -1,0 +1,65 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "TorchServe Python Client",
+    "section": "",
+    "text": "pip install torchserve_client"
+  },
+  {
+    "objectID": "index.html#install",
+    "href": "index.html#install",
+    "title": "TorchServe Python Client",
+    "section": "",
+    "text": "pip install torchserve_client"
+  },
+  {
+    "objectID": "index.html#usage",
+    "href": "index.html#usage",
+    "title": "TorchServe Python Client",
+    "section": "Usage",
+    "text": "Usage\nUsing torchserve_client is a breeze! It has support for both REST APIs and gRPC APIs.\n\nREST Client\nTo make calls to REST endpoint, simply initialize a TorchServeClientREST object as shown below:\n\nfrom torchserve_client import TorchServeClientREST\n\n# Initialize the REST TorchServeClient object\nts_client = TorchServeClientREST()\nts_client\n\nTorchServeClient(base_url=http://localhost, management_port=8081, inference_port=8080)\n\n\nIf you wish to customize the base URL, management port, or inference port of your TorchServe server, you can pass them as arguments during initialization:\n\nfrom torchserve_client import TorchServeClientREST\n\n# Customize the base URL, management port, and inference port\nts_client = TorchServeClientREST(base_url='http://your-torchserve-server.com', \n                             management_port=8081, inference_port=8080)\nts_client\n\nTorchServeClient(base_url=http://your-torchserve-server.com, management_port=8081, inference_port=8080)\n\n\n\n\ngRPC Client\nTo create a gRPC client, simply create a TorchServeClientGRPC object\n\nfrom torchserve_client import TorchServeClientGRPC\n\n# Initialize the gRPC TorchServeClient object\nts_client = TorchServeClientGRPC()\nts_client\n\nTorchServeClientGRPC(base_url=localhost, management_port=7071, inference_port=7070)\n\n\nTo customize base URL and default ports, pass them as arguments during initialization\n\nfrom torchserve_client import TorchServeClientGRPC\n\n# Initialize the gRPC TorchServeClient object\nts_client = TorchServeClientGRPC(base_url='http://your-torchserve-server.com', \n                             management_port=7071, inference_port=7070)\nts_client\n\nTorchServeClientGRPC(base_url=your-torchserve-server.com, management_port=7071, inference_port=7070)\n\n\nWith these intuitive APIs at your disposal, you can harness the full power of the Management and Inference API and take your application to next level. Happy inferencing! 🚀🔥"
+  },
+  {
+    "objectID": "rest.html",
+    "href": "rest.html",
+    "title": "REST Client",
+    "section": "",
+    "text": "source"
+  },
+  {
+    "objectID": "rest.html#management-apis",
+    "href": "rest.html#management-apis",
+    "title": "REST Client",
+    "section": "Management APIs",
+    "text": "Management APIs\nWith TorchServe Management APIs, you can effortlessly manage your models at runtime. Here’s a quick rundown of the actions you can perform using our TorchServeClient SDK:\n\nRegister a Model: Easily register a model with TorchServe using the ts_client.management.register_model() method.\n\n\nts_client.management.register_model('https://torchserve.pytorch.org/mar_files/squeezenet1_1.mar')\n\n\nIncrease/Decrease Workers: Scale the number of workers for a specific model with simplicity using ts_client.management.scale_workers().\n\n\nts_client.management.scale_workers('squeezenet1_1', min_worker=1, max_worker=2)\n\n{'status': 'Processing worker updates...'}\n\n\n\nModel Status: Curious about a model’s status? Fetch all the details you need using ts_client.management.describe_model().\n\n\nts_client.management.describe_model('squeezenet1_1')\n\n[{'modelName': 'squeezenet1_1',\n  'modelVersion': '1.0',\n  'modelUrl': 'https://torchserve.pytorch.org/mar_files/squeezenet1_1.mar',\n  'runtime': 'python',\n  'minWorkers': 1,\n  'maxWorkers': 1,\n  'batchSize': 1,\n  'maxBatchDelay': 100,\n  'loadedAtStartup': False,\n  'workers': [{'id': '9001',\n    'startTime': '2023-07-17T22:55:40.155Z',\n    'status': 'UNLOADING',\n    'memoryUsage': 0,\n    'pid': -1,\n    'gpu': False,\n    'gpuUsage': 'N/A'}]}]\n\n\n\nList Registered Models: Quickly fetch a list of all registered models using ts_client.management.list_models().\n\n\n# List all models\nts_client.management.list_models()\n\n{'models': [{'modelName': 'squeezenet1_1',\n   'modelUrl': 'https://torchserve.pytorch.org/mar_files/squeezenet1_1.mar'}]}\n\n\n\nSet Default Model Version: Ensure the desired version of a model is the default choice with the ts_client.management.set_model_version() method.\n\n\nts_client.management.set_default_version('squeezenet1_1', '1.0')\n\n{'status': 'Default vesion succsesfully updated for model \"squeezenet1_1\" to \"1.0\"'}\n\n\n\nUnregister a Model: If you need to bid farewell to a model, use the ts_client.management.unregister_model() function to gracefully remove it from TorchServe.\n\n\nts_client.management.unregister_model('squeezenet1_1')\n\n{'status': 'Model \"squeezenet1_1\" unregistered'}\n\n\n\nAPI Description: view a full list of Managment APIs.\n\n\nts_client.management.api_description()\n\nRemember, all these management APIs can be accessed conveniently under the namespace ts_client.management."
+  },
+  {
+    "objectID": "rest.html#inference-apis",
+    "href": "rest.html#inference-apis",
+    "title": "REST Client",
+    "section": "Inference APIs",
+    "text": "Inference APIs\nTorchServeClient allows you to interact with the Inference API, which listens on port 8080, enabling you to run inference on your samples effortlessly. Here are the available APIs under the ts_client.inference namespace:\n\nAPI Description: Want to explore what APIs and options are available? Use ts_client.inference.api_description() to get a comprehensive list.\n\n\nts_client.inference.api_description()\n\n\nHealth Check API: Ensure the health of the running server with the ts_client.inference.health_check() method.\n\n\nts_client.inference.health_check()\n\n{'status': 'Healthy'}\n\n\n\nPredictions API: Get predictions from the served model using ts_client.inference.predictions().\n\n\nts_client.inference.prediction('squeezenet1_1', data={'data': open('/Users/ankursingh/Downloads/kitten_small.jpg', 'rb')})\n\n{'lynx': 0.5455798506736755,\n 'tabby': 0.2794159948825836,\n 'Egyptian_cat': 0.10391879826784134,\n 'tiger_cat': 0.06263326108455658,\n 'leopard': 0.0050191376358270645}\n\n\n\nExplanations API: Dive into the served model’s explanations with ease using ts_client.inference.explanations().\n\n\nts_client.inference.explaination('squeezenet1_1', data={'data': open('/Users/ankursingh/Downloads/kitten_small.jpg', 'rb')})"
+  },
+  {
+    "objectID": "grpc.html",
+    "href": "grpc.html",
+    "title": "gRPC Client",
+    "section": "",
+    "text": "source"
+  },
+  {
+    "objectID": "grpc.html#management-apis",
+    "href": "grpc.html#management-apis",
+    "title": "gRPC Client",
+    "section": "Management APIs",
+    "text": "Management APIs\nHere is the list of all the supported gRPC management endpoints:\n\ndescribe_model: Provide detailed information about the default version of a model\nArguments:\n\nmodel_name (str, required): Name of the model to describe\nmodel_version (str, optional): Version of the model to describe\ncustomized (bool, optional): Customized metadata\n\nUsage:\nresponse = ts_client.management.describe_model(model_name=\"mnist\")\nresponse.msg\nlist_models: List all registered models in TorchServe\nArguments:\n\nlimit (int, optional): Maximum number of items to return (default: 100).\nnext_page_token (int, optional): Token to retrieve the next set of results\n\nUsage:\nresponse = ts_client.management.list_models()\nresponse.msg\nregister_model : Register a new model to TorchServe\nArguments:\n\nbatch_size (int, optional): Inference batch size (default: 1).\nhandler (str, optional): Inference handler entry-point.\ninitial_workers (int, optional): Number of initial workers (default: 0).\nmax_batch_delay (int, optional): Maximum delay for batch aggregation (default: 100).\nmodel_name (str, optional): Name of the model.\nresponse_timeout (int, optional): Maximum time for model response (default: 120 seconds).\nruntime (str, optional): Runtime for model custom service code.\nsynchronous (bool, optional): Synchronous worker creation (default: False).\nurl (str, required): Model archive download URL.\ns3_sse_kms (bool, optional): S3 SSE KMS enabled (default: False).\n\nUsage:\nresponse = ts_client.management.register_model()\nresponse.msg\nscale_worker: Configure the number of workers for a model. This is an asynchronous call by default\nArguments:\n\nmodel_name (str, required): Name of the model to scale workers.\nmodel_version (str, optional): Model version.\nmax_worker (int, optional): Maximum number of worker processes.\nmin_worker (int, optional): Minimum number of worker processes.\nnumber_gpu (int, optional): Number of GPU worker processes to create.\nsynchronous (bool, optional): Synchronous call (default: False).\ntimeout (int, optional): Wait time for worker completion (0: terminate immediately, -1: wait infinitely).\n\nUsage:\nresponse = ts_client.management.scale_worker()\nresponse.msg\nset_default: Set default version of a model\nArguments:\n\nmodel_name (str, required): Name of the model for which the default version should be updated\nmodel_version (str, required): Version of the model to set as the default version\n\nUsage:\nresponse = ts_client.management.set_default()\nresponse.msg\nunregister_model: Unregister a particular version of a model from TorchServe. This call is asynchronous by default.\nArguments:\n\nmodel_name (str, required): Name of the model to unregister.\nmodel_version (str, optional): Version of the model to unregister. If none, then default version of the model will be unregistered.\n\nUsage:\nresponse = ts_client.management.unregister_model()\nresponse.msg\n\nCheck management.proto file to better understand the arguments of each method."
+  },
+  {
+    "objectID": "grpc.html#inference-apis",
+    "href": "grpc.html#inference-apis",
+    "title": "gRPC Client",
+    "section": "Inference APIs",
+    "text": "Inference APIs\nHere is a list gRPC inference endpoints:\n\nping: Check Health Status\nUsage:\nresponse = ts_client.inference.ping()\nresponse.health\npredictions: Get predictions\nArguments:\n\nmodel_name (str, required): Name of the model.\nmodel_version (str, optional): Version of the model. If not provided, default version will be used.\ninput (Dict[str, bytes], required): Input data for model prediction\n\nUsage:\nresponse = ts_client.inference.predictions(model_name=\"mnist\", input={\"data\": data})\nresponse.prediction.decode(\"utf-8\")\nsteam_predictions: Get steaming predictions\nArguments:\n\nmodel_name (str, required): Name of the model.\nmodel_version (str, optional): Version of the model. If not provided, default version will be used.\ninput (Dict[str, bytes], required): Input data for model prediction\n\nUsage:\nresponse = ts_client.inference.stream_predictions(model_name=\"mnist\", input={\"data\": data})\nresponse.prediction.decode(\"utf-8\")\n\nAgain, for more detail about gRPC request and response objects, refer inference.proto."
+  }
+]

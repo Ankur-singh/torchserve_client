@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://Ankur-singh.github.io/torchserve_client/00_init.html</loc>
+    <lastmod>2023-08-14T02:25:48.262Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Ankur-singh.github.io/torchserve_client/index.html</loc>
+    <lastmod>2023-08-14T02:25:47.562Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Ankur-singh.github.io/torchserve_client/rest.html</loc>
+    <lastmod>2023-08-14T02:25:46.666Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Ankur-singh.github.io/torchserve_client/grpc.html</loc>
+    <lastmod>2023-08-14T02:25:47.982Z</lastmod>
+  </url>
+</urlset>
